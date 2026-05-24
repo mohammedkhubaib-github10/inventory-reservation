@@ -39,8 +39,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 
 # Install lightweight Prisma CLI inside the runner stage for startup push
-RUN npm install prisma@6.19.3 --omit=dev
-
 USER nextjs
 
 EXPOSE 3000
@@ -48,5 +46,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# On container startup, sync the database tables first, then start Next.js
-CMD ["sh", "-c", "npx prisma db push && node server.js"]
+# Start Next.js standalone server (no npm/npx needed)
+CMD ["node", "server.js"]
