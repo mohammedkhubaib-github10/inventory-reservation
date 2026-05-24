@@ -22,10 +22,11 @@ if [ -d .git ]; then
   git pull origin main
 fi
 
-# 3. Build and start the Docker containers
-echo "📦 Building and starting Docker containers..."
+# 3. Pull and start the Docker containers
+echo "📦 Pulling and starting Docker containers..."
 docker compose down
-docker compose up -d --build
+docker compose pull
+docker compose up -d
 
 # 4. Wait for database service healthcheck
 echo "⌛ Waiting for database container to be healthy..."
