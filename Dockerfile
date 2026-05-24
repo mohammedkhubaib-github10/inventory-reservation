@@ -39,11 +39,6 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copy node_modules and config files needed for running push/seed on startup
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
-COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
-
 USER nextjs
 
 EXPOSE 3000
@@ -51,5 +46,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# On startup, run schema sync and seeding, then start Next.js
-CMD ["sh", "-c", "npx prisma db push && npx prisma db seed && node server.js"]
+# Start Next.js standalone server
+CMD ["node", "server.js"]
