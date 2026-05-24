@@ -1,0 +1,16 @@
+node_modules
+.next
+out
+build
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
+*.log
+npm-debug.log*
+.git
+.gitignore
+README.md
+scripts
+concurrency-test.js
