@@ -25,4 +25,8 @@ echo "🗄️ Initializing schema and seeding database..."
 npx prisma@6 db push
 npx prisma@6 db seed
 
+# 5. Clean up old dangling images to preserve disk space
+echo "🧹 Cleaning up unused Docker build cache and dangling images..."
+docker image prune -f
+
 echo "✅ Success! Application is running live on http://localhost:3001"

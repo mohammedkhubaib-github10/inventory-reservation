@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Copy dependency configs
 COPY package.json package-lock.json ./
-RUN npm install
+RUN --mount=type=cache,target=/root/.npm npm install
 
 # Stage 2: Build the application
 FROM node:18-alpine AS builder
@@ -17,10 +17,10 @@ COPY . .
 # Generate Prisma Client schema types and binary engines
 RUN npx prisma generate
 
-# Build Next.js stand-alone application
+# Build Next.js standalone application using compiler cache mount
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
-RUN npm run build
+RUN --mount=type=cache,target=/app/.next/cache npm run build
 
 # Stage 3: Runner stage (clean, minimal container runtime)
 FROM node:18-alpine AS runner
