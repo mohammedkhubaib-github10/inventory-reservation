@@ -3,6 +3,15 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
+  console.log('Checking database seed status...');
+
+  // Check if database is already seeded to preserve persistent volume data
+  const productCount = await prisma.product.count();
+  if (productCount > 0) {
+    console.log('Database already seeded. Skipping...');
+    return;
+  }
+
   console.log('Seeding database...');
 
   // Clean existing data in dependency order
