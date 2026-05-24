@@ -19,15 +19,6 @@ This is a clean, production-grade inventory reservation system built with Next.j
 - **Styling**: TailwindCSS v3
 
 ---
-## Expiry Cleanup Strategy
-
-When a customer leaves their cart open or a payment fails, their reserved stock must return to the active inventory pool. We use a **hybrid cleanup strategy**:
-
-1. **Lazy Cleanup**: Whenever a user reads the product catalog (`GET /api/products`) or attempts to reserve stock (`POST /api/reservations`), a cleanup function runs first inside the transaction. It releases all pending reservations where `expiresAt <= NOW()`.
-2. **Background Cron**: A dedicated endpoint `GET/POST /api/cron/cleanup` is available. You can register this URL in **Vercel Cron** to run every 1–5 minutes to batch-release expired locks.
-
----
-
 ## Architectural Tradeoffs
 
 ### 1. Postgres Row-Level Locks vs. Redis Distributed Locking (Redlock)
