@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Copy dependency configs and install (no multi-stage copy of node_modules)
 COPY package.json package-lock.json ./
-RUN --mount=type=cache,target=/root/.npm npm install
+RUN npm install
 
 # Copy application source code
 COPY . .
@@ -14,10 +14,10 @@ COPY . .
 # Generate Prisma Client schema types and binary engines
 RUN npx prisma generate
 
-# Build Next.js standalone application using compiler cache mount
+# Build Next.js standalone application
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
-RUN --mount=type=cache,target=/app/.next/cache npm run build
+RUN npm run build
 
 # Stage 3: Runner stage (clean, minimal container runtime)
 FROM node:18-alpine AS runner
@@ -45,6 +45,7 @@ EXPOSE 3000
 
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
+ENV npm_config_cache=/tmp/.npm
 
-# Start Next.js standalone server (no npm/npx needed)
-CMD ["node", "server.js"]
+# Automatically sync database schema on startup and run the standalone server
+CMD npx prisma db push --accept-data-loss && node server.js

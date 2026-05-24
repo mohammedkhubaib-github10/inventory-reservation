@@ -20,8 +20,9 @@ until [ "$(docker inspect -f '{{.State.Health.Status}}' inventory-db)" == "healt
     sleep 1
 done
 
-# 4. Clean up old dangling images to preserve disk space
-echo "🧹 Cleaning up unused Docker build cache and dangling images..."
-docker image prune -f
+# 4. Clean up unused images, stopped containers, and builder cache to preserve disk space
+echo "🧹 Cleaning up unused Docker containers, build cache, and images..."
+docker system prune -f
+docker builder prune -a -f
 
 echo "✅ Success! Application is running live on http://localhost:3001"
