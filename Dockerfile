@@ -1,17 +1,14 @@
-# Stage 1: Install dependencies
-FROM node:18-alpine AS deps
+# Stage 1: Build the application
+FROM node:18-alpine AS builder
 # Add libc6-compat for Next.js features
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy dependency configs
+# Copy dependency configs and install (no multi-stage copy of node_modules)
 COPY package.json package-lock.json ./
 RUN --mount=type=cache,target=/root/.npm npm install
 
-# Stage 2: Build the application
-FROM node:18-alpine AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+# Copy application source code
 COPY . .
 
 # Generate Prisma Client schema types and binary engines
