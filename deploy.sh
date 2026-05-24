@@ -20,11 +20,7 @@ until [ "$(docker inspect -f '{{.State.Health.Status}}' inventory-db)" == "healt
     sleep 1
 done
 
-# 4. Run database migrations on host
-echo "🗄️ Syncing database schema..."
-npx prisma@6 db push
-
-# 5. Clean up old dangling images to preserve disk space
+# 4. Clean up old dangling images to preserve disk space
 echo "🧹 Cleaning up unused Docker build cache and dangling images..."
 docker image prune -f
 
